@@ -6,13 +6,13 @@
 <body>
   <header>
     <h1 class="logo">XORA</h1>
-    <div class="description">
-      {{.firstName}}<br>
-      {{.handle}}<br>
-      {{.city}}<br>
-      {{.organization}}<br>
-      {{.maxRank}}<br>
-    </div>
+    <img src="{{.photo}}" alt="User Photo"><br>
+    {{.firstName}}<br>
+    {{.handle}}<br>
+    {{.city}}<br>
+    {{.organization}}<br>
+    {{.maxRank}}<br>
+    
   </header>
   <br>
   <br>

@@ -29,14 +29,24 @@ func (s *Socket) GetMessage(handle string) string {
 	message := "GET /api/user.info?handles=" + handle + " HTTP/1.0\r\nHost: codeforces.com\r\n\r\n"
 	s.SocketClient.Write([]byte(message))
 	buff := make([]byte, 1024)
-	n, _ := s.SocketClient.Read(buff)
+	n, err := s.SocketClient.Read(buff)
+	if err != nil {
+		fmt.Print("Deu merda pra ler do server = ")
+		fmt.Println(err)
+	}
+
 	aux := string(buff[:n])
 	teste := strings.SplitAfterN(aux, "{", 2)
-	aux = teste[1]
-	aux = strings.Replace(aux, "[", "", -1)
-	aux = strings.Replace(aux, "]", "", -1)
-	aux = strings.Replace(aux, "{", "", -1)
-	aux = strings.Replace(aux, "}", "", -1)
-	aux = strings.Replace(aux, `"result":`, "", -1)
+	if len(teste) > 1 {
+		aux = teste[1]
+		aux = strings.Replace(aux, "[", "", -1)
+		aux = strings.Replace(aux, "]", "", -1)
+		aux = strings.Replace(aux, "{", "", -1)
+		aux = strings.Replace(aux, "}", "", -1)
+		aux = strings.Replace(aux, `"result":`, "", -1)
+	} else {
+		fmt.Println("Len eh < 1")
+		fmt.Println("AUX = " + aux)
+	}
 	return "{" + aux + "}"
 }
