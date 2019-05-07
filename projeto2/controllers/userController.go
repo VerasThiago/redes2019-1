@@ -47,6 +47,7 @@ func (c *UserController) Get() {
 		c.TplName = "error.html"
 		return
 	}
+	defer s.SocketClient.Close()
 
 	// Get html page
 	response := s.GetWebPage()
