@@ -48,12 +48,16 @@ func (c *UserController) Get() {
 		return
 	}
 
+	// Get html page
 	response := s.GetWebPage()
 
+	// open file to write html
 	f, err := os.Create("views/find.html")
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	// write on file
 	l, err := f.WriteString(response)
 	if err != nil {
 		fmt.Println(err)
