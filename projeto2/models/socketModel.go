@@ -10,43 +10,43 @@ import (
 type Socket struct {
 	Ip           string
 	Port         int
+	Path         string
 	SocketClient net.Conn
 }
 
-func (s *Socket) Init() {
+func (s *Socket) Init() error {
 	var err error
 	s.SocketClient, err = net.Dial("tcp", strings.Join([]string{s.Ip, strconv.Itoa(s.Port)}, ":"))
-	if err != nil {
-		fmt.Println("Deu merda pra criar o socket")
-		fmt.Println(err)
-	} else {
-		fmt.Println("Deu bom pra criar o socket")
-	}
+	return err
 
 }
 
-func (s *Socket) GetMessage(handle string) string {
-	message := "GET /api/user.info?handles=" + handle + " HTTP/1.0\r\nHost: codeforces.com\r\n\r\n"
+func (s *Socket) GetWebPage() string {
+
+	message := "GET /" + s.Path + " HTTP/1.0\r\nHost: " + s.Ip + "\r\n\r\n"
+
+	fmt.Println(message)
+
 	s.SocketClient.Write([]byte(message))
-	buff := make([]byte, 1024)
-	n, err := s.SocketClient.Read(buff)
-	if err != nil {
-		fmt.Print("Deu merda pra ler do server = ")
-		fmt.Println(err)
+	buffer := make([]byte, 1024)
+
+	response := ""
+
+	for true {
+		n, err := s.SocketClient.Read(buffer)
+		if err != nil || n == 0 {
+			break
+		}
+		response += string(buffer[:n])
 	}
 
-	aux := string(buff[:n])
-	teste := strings.SplitAfterN(aux, "{", 2)
-	if len(teste) > 1 {
-		aux = teste[1]
-		aux = strings.Replace(aux, "[", "", -1)
-		aux = strings.Replace(aux, "]", "", -1)
-		aux = strings.Replace(aux, "{", "", -1)
-		aux = strings.Replace(aux, "}", "", -1)
-		aux = strings.Replace(aux, `"result":`, "", -1)
-	} else {
-		fmt.Println("Len eh < 1")
-		fmt.Println("AUX = " + aux)
+	split := strings.SplitAfterN(response, "<html", 2)
+
+	if len(split) > 1 {
+		response = "<html" + split[1]
 	}
-	return "{" + aux + "}"
+
+	//response = strings.Replace(response, "href="+`"`+"/", "href="+`"`+s.Ip+"/", -1)
+
+	return response
 }
