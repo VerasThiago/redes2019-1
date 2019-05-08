@@ -59,7 +59,7 @@ func (c *UserController) Get() {
 	response := s.GetWebPage()
 
 	// Write response on find.html file
-	if err := utils.WriteOnFile(response); err != nil {
+	if err := utils.WriteOnFile(response, "find.html"); err != nil {
 		fmt.Println("Failed to render html on file")
 		c.TplName = "error.html"
 		return

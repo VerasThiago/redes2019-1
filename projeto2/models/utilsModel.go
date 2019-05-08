@@ -7,22 +7,22 @@ import (
 type Utils struct {
 }
 
-func (u Utils) WriteOnFile(html string) error {
+func (u Utils) WriteOnFile(html string, fileName string) error {
 
 	// open file to write html
-	f, err := os.Create("views/find.html")
+	f, err := os.Create("views/" + fileName)
 	if err != nil {
 		return err
 	}
 
 	// write on file
-	_, err = f.WriteString(html)
-	if err != nil {
+	if _, err = f.WriteString(html); err != nil {
 		f.Close()
 		return err
 	}
-	err = f.Close()
-	if err != nil {
+
+	// close file
+	if err = f.Close(); err != nil {
 		return err
 	}
 	return nil
